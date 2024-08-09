@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import config
-from orm import models
+from orm.models import User
 
 password = config.DATABASE_PASSWORD
 engine = create_engine('mysql+pymysql://root:' + password + '@localhost:3306/flask_run?charset=utf8')
@@ -18,3 +18,9 @@ def init_db():
     # you will have to import them first before calling init_db()
     
     Base.metadata.create_all(bind=engine)
+
+def regist_user(username, password):
+    new_user = User(username, password)
+    db_session.add(new_user)
+    db_session.commit()
+    db_session.close()
