@@ -2,11 +2,11 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
-from flaskr.db import db_session
+from flaskr.db import Session
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
-    db_session.remove()
+    Session.remove()
 
 @app.route('/')
 def hello_world():
