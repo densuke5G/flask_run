@@ -22,24 +22,34 @@ def init_db():
 def regist_user(username, password):
     """Register a new user in the database."""
     try:
-        session = Session()
+        db_session = Session()
         new_user = User(username=username, password=password)
-        session.add(new_user)
-        session.commit()
+        db_session.add(new_user)
+        db_session.commit()
     except Exception as e:
-        session.rollback()
+        db_session.rollback()
         print(f"Error while adding user: {e}")
     finally:
-        session.close()
+        db_session.close()
 
-def select_user_byusername(username):
+def select_user_by_username(username):
     """Retrieve a user by username."""
     try:
-        session = Session()
-        user = session.query(User).filter(User.username == username).first()
+        db_session = Session()
+        user = db_session.query(User).filter(User.username == username).first()
         return user
     except Exception as e:
         print(f"Error while retrieving user: {e}")
     finally:
-        session.close()
-    
+        db_session.close()
+
+def select_user_by_user_id(user_id):
+    """Retrieve a user by user_id."""
+    try:
+        db_session = Session()
+        user = db_session.query(User).filter(User.id == user_id).first()
+        return user
+    except Exception as e:
+        print(f"Error while retrieving user: {e}")
+    finally:
+        db_session.close()
