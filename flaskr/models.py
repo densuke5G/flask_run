@@ -1,13 +1,16 @@
 from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from ..flaskr.db import Base
+from sqlalchemy.ext.declarative import declarative_base
+# from flaskr.db import Base
+
+Base = declarative_base()
 
 class User(Base):
-    __tablename__ = 'users'
+    __tablename__ = 'user'
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(16), unique=True, nullable=False)
     password = Column(String(16), nullable=False)
-    post = relationship(back_populates='users')
+    posts = relationship('Post', back_populates='user')
 
     def __init__(self, username=None, password=None):
         self.username = username
@@ -17,12 +20,13 @@ class User(Base):
         return f'<User {self.username!r}>'
     
 class Post(Base):
-    __tablename__ = 'posts'
+    __tablename__ = 'post'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    author_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    author_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     title = Column(String(256))
     body = Column(String(1000))
     created = Column(DateTime)
+    user = relationship('User', back_populates='posts')
 
     def __init__(self, author_id=None, title=None, body=None, created=None):
         self.author_id = author_id

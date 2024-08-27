@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import config
-from orm.models import User
+from flaskr.models import User
 
 password = config.DATABASE_PASSWORD
 engine = create_engine('mysql+pymysql://root:' + password + '@localhost:3306/flask_run?charset=utf8')
