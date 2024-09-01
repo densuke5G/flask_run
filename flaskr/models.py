@@ -9,7 +9,7 @@ class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(16), unique=True, nullable=False)
-    password = Column(String(16), nullable=False)
+    password = Column(String(512), nullable=False)
     posts = relationship('Post', back_populates='user')
 
     def __init__(self, username=None, password=None):
