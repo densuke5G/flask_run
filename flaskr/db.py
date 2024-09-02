@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import config
-from flaskr.models import User
+from flaskr.models import User, Post
 
 password = config.DATABASE_PASSWORD
 engine = create_engine('mysql+pymysql://root:' + password + '@localhost:3306/flask_run?charset=utf8')
@@ -51,5 +51,15 @@ def select_user_by_user_id(user_id):
         return user
     except Exception as e:
         print(f"Error while retrieving user: {e}")
+    finally:
+        db_session.close()
+
+def select_posts():
+    try:
+        db_session = Session()
+        posts = db_session.query(Post, User).join(User, User.id == Post.author_id).all()
+        return posts
+    except Exception as e:
+        print(f"Error while retrieving posts: {e}")
     finally:
         db_session.close()
