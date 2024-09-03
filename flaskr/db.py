@@ -55,11 +55,49 @@ def select_user_by_user_id(user_id):
         db_session.close()
 
 def select_posts():
+    """Retrieve a posts and join user table."""
     try:
         db_session = Session()
         posts = db_session.query(Post, User).join(User, User.id == Post.author_id).all()
         return posts
     except Exception as e:
         print(f"Error while retrieving posts: {e}")
+    finally:
+        db_session.close()
+
+def create_post(title, body):
+    """create a new post"""
+    try:
+        db_session = Session()
+        new_post = Post(title=title, body=body)
+        db_session.add(new_post)
+        db_session.commit()
+    except Exception as e:
+        db_session.rollback()
+        print(f"Error while adding user: {e}")
+    finally:
+        db_session.close()
+
+def select_post_by_post_id(id):
+    """Retrieve a post by post_id."""
+    try:
+        db_session = Session()
+        post = db_session.query(Post).filter(Post.id == id).first()
+        return post
+    except Exception as e:
+        print(f"Error while retrieving post: {e}")
+    finally:
+        db_session.close()
+
+def update_post(title, body, id):
+    """update a post"""
+    try:
+        db_session = Session()
+        post = db_session.query(Post).filter(Post.id == id).first()
+        post.title = title
+        post.body = body
+        db_session.commit()
+    except Exception as e:
+        print(f"Error while updating post: {e}")
     finally:
         db_session.close()
