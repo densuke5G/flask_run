@@ -18,6 +18,7 @@ def create():
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
+        author_id = g.user.id
         error = None
 
         if not title:
@@ -26,7 +27,7 @@ def create():
         if error is not None:
             flash(error)
         else:
-            db.create_post(title, body)
+            db.create_post(title, body, author_id)
             return redirect(url_for('blog.index'))
 
     return render_template('blog/create.html')
@@ -37,7 +38,7 @@ def get_post(id, check_author=True):
     if post is None:
         abort(404, f"Post id {id} doesn't exist.")
 
-    if check_author and post.author_id != g.user['id']:
+    if check_author and post.author_id != g.user.id:
         abort(403)
 
     return post
@@ -62,3 +63,10 @@ def update(id):
             return redirect(url_for('blog.index'))
 
     return render_template('blog/update.html', post=post)
+
+@bp.route('/<int:id>/delete', methods=('POST',))
+@login_required
+def delete(id):
+    get_post(id)
+    db.delete_post(id)
+    return redirect(url_for('blog.index'))

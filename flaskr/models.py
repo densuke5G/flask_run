@@ -1,7 +1,7 @@
 from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
-# from flaskr.db import Base
+import datetime
 
 Base = declarative_base()
 
@@ -25,7 +25,7 @@ class Post(Base):
     author_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     title = Column(String(256))
     body = Column(String(1000))
-    created = Column(DateTime)
+    created = Column(DateTime, default=datetime.datetime.now())
     user = relationship('User', back_populates='posts')
 
     def __init__(self, author_id=None, title=None, body=None, created=None):
